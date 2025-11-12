@@ -1,0 +1,23 @@
+import express from "express";
+import authMiddleware from "../middlewares/authMiddlware.js";
+import authorizeRole from "../middlewares/roleMiddlware.js";
+
+const userRoutes = express.Router();
+
+//only admin can access this router
+userRoutes.get("/admin", authMiddleware, authorizeRole("admin"), (req, res) => {
+    res.json({ message: "Welcome Admin!" })
+})
+
+//only admin and manager can access this router
+userRoutes.get("/manager", authMiddleware, authorizeRole("admin", "manager"), (req, res) => {
+    res.json({ message: "Welcome Manager!" })
+})
+
+//All can access this route
+userRoutes.get("/user", authMiddleware, authorizeRole("admin", "manager", "user"), (req, res) => {
+    res.json({ message: "Welcome User!" })
+})
+
+export default userRoutes;
+
