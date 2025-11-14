@@ -1,6 +1,7 @@
 import express from "express";
 import authMiddleware from "../middlewares/authMiddlware.js";
 import authorizeRole from "../middlewares/roleMiddlware.js";
+import authPermission from "../middlewares/permissionMiddleware.js";
 
 const userRoutes = express.Router();
 

@@ -15,9 +15,8 @@ const userSchema = new mongoose.Schema({
         required: true
     },
     role: {
-        type: String,
-        required: true,
-        enum: ["admin", "manager", "user"]
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "role"
     }
 },
     { timestamps: true }

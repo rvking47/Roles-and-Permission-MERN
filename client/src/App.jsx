@@ -19,7 +19,7 @@ const App = () => {
     if (!allowedRoles.includes(userRole)) {
       return <Navigate to="/access-denied" replace />
     }
-    return children
+    return children 
   }
   return (
     <div className='App'>
