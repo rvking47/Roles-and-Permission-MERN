@@ -1,17 +1,13 @@
 import express from "express";
-import Role from "../models/roleModel.js";
+import authMiddleware from "../middlewares/authMiddlware.js";
+import { create, distroy, single, update, view } from "../controllers/roleController.js";
 
 const roleRouter = express.Router();
 
-roleRouter.post("/create", async (req, res) => {
-    const { name, permissions } = req.body;
-
-    const role = new Role({
-        name,
-        permissions
-    })
-    await role.save();
-    res.status(201).json({ mesaage: "Role created", role })
-})
+roleRouter.post("/create", authMiddleware, create);
+roleRouter.get("/view", authMiddleware, view);
+roleRouter.get("/single/:id", authMiddleware, single);
+roleRouter.delete("/distroy/:id", authMiddleware, distroy);
+roleRouter.put("/update/:id", authMiddleware, update);
 
 export default roleRouter;
