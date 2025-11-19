@@ -1,7 +1,14 @@
 @import url('https://fonts.googleapis.com/css2?family=Slabo+27px&display=swap');
 
+@import url('https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap');
+
 .slabo-27px-regular {
   font-family: "Slabo 27px", serif;
   font-style: normal;
 }
 
+.nunito-uniquifier {
+  font-family: "Nunito", sans-serif;
+  font-optical-sizing: auto;
+  font-style: normal;
+}

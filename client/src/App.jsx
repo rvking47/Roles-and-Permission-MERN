@@ -7,6 +7,7 @@ import AdminHome from './pages/admin/AdminHome';
 import ManagerHome from './pages/manager/ManagerHome';
 import UserHome from './pages/user/UserHome';
 import Accessdenied from './pages/AccessDenied/Accessdenied';
+import UserProfile from './pages/profile/UserProfile';
 
 const App = () => {
 
@@ -33,6 +34,10 @@ const App = () => {
         <Route path='/users/admin' element={<PrivateRoute allowedRoles={["admin"]} ><AdminHome /></PrivateRoute>} />
         <Route path='/users/manager' element={<PrivateRoute allowedRoles={["admin", "manager"]}><ManagerHome /></PrivateRoute>} />
         <Route path='/users/user' element={<PrivateRoute allowedRoles={["admin", "manager", "user"]}><UserHome /></PrivateRoute>} />
+
+        {/* User Profile */}
+        <Route path='/users/profile' element={<PrivateRoute allowedRoles={["admin", "manager", "user"]}><UserProfile /></PrivateRoute>} />
+
 
         {/* Access-denied Routes */}
         <Route path='/access-denied' element={<Accessdenied />} />
