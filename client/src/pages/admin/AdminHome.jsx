@@ -2,20 +2,51 @@ import axios from "axios";
 import Charts from "../chart/Charts";
 import Layout from "../layout/Layout"
 import { FiUsers, FiActivity, FiUserPlus } from "react-icons/fi";
+import { useEffect, useState } from "react";
 
-const base_url="http://localhost:7001";
+const base_url = "http://localhost:7001";
 
 const AdminHome = () => {
-
-  const handleUsers=async()=>{
-    try{
-     const result=await axios.get(`${base_url}/api/auth/`)
+  const [usersCount, setUserCount] = useState("");
+  const [usersActive, setUsersActive] = useState("");
+  const [usersNew, setUsersNew] = useState("");
+  const token = localStorage.getItem("token");
+  const handleUsers = async () => {
+    try {
+      const result = await axios.get(`${base_url}/api/users/view`, {
+        headers: { "Authorization": `Bearer ${token}` },
+        validateStatus: () => true
+      });
+      if (result.status === 200) {
+        setUserCount(result.data);
+        const actives = result.data.filter(user => user.isLoggedIn === true);
+        setUsersActive(actives.length)
+      }
     }
-    catch(err)
-    {
-
+    catch (err) {
+      toast.error("Server Error", err);
     }
   }
+
+  const handleNewUsers = async () => {
+    try {
+      const result = await axios.get(`${base_url}/api/users/newusers`, {
+        headers: { "Authorization": `Bearer ${token}` },
+        validateStatus: () => true
+      });
+      if (result.status === 200) {
+        setUsersNew(result.data);
+      }
+    }
+    catch (err) {
+      toast.error("Server Error", err);
+    }
+  }
+
+  useEffect(() => {
+    handleUsers();
+    handleNewUsers();
+  }, [])
 
   return (
     <Layout>
@@ -33,7 +64,9 @@ const AdminHome = () => {
               </div>
               <div>
                 <h4 className="text-lg font-semibold">Total Users</h4>
-                <p className="text-gray-500 text-sm">2,450</p>
+                <p className="text-gray-500 text-sm">{
+                  usersCount.length
+                }</p>
               </div>
             </div>
           </div>
@@ -46,7 +79,9 @@ const AdminHome = () => {
               </div>
               <div>
                 <h4 className="text-lg font-semibold">Active Users Today</h4>
-                <p className="text-gray-500 text-sm">320</p>
+                <p className="text-gray-500 text-sm">{
+                  usersActive
+                }</p>
               </div>
             </div>
           </div>
@@ -59,7 +94,9 @@ const AdminHome = () => {
               </div>
               <div>
                 <h4 className="text-lg font-semibold">New Registrations Today</h4>
-                <p className="text-gray-500 text-sm">21</p>
+                <p className="text-gray-500 text-sm">{
+                  usersNew.length
+                  }</p>
               </div>
             </div>
           </div>

@@ -17,6 +17,10 @@ const userSchema = new mongoose.Schema({
     role: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "role"
+    },
+    isLoggedIn: {
+        type: Boolean,
+        default: false
     }
 },
     { timestamps: true }

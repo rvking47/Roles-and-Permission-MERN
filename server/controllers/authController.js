@@ -53,10 +53,13 @@ const login = async (req, res) => {
         }
 
         const jwtToken = jwt.sign({ _id: user._id, username: user.username, role: user.role.name, permissions: user.role.permissions.map(p => p.name) }, process.env.API_SECRETKEY, {
-            expiresIn: "8h"
+            expiresIn: "5d"
         });
 
-        res.status(200).json({ message: `${username} user login successFully!!`, token: jwtToken, user: { username: user.username, email: user.email, role: user.role.name, permissions: user.role.permissions.map(p => p.name) } });
+        user.isLoggedIn = true;
+        await user.save();
+
+        res.status(200).json({ message: `${username} user login successFully!!`, token: jwtToken, user: { _id: user._id, username: user.username, email: user.email, role: user.role.name, isLoggedIn: user.isLoggedIn, permissions: user.role.permissions.map(p => p.name) } });
     }
     catch (err) {
         res.status(500).json({ message: err.message });
@@ -64,4 +67,23 @@ const login = async (req, res) => {
 
 }
 
-export { register, login };
+const logout = async (req, res) => {
+    try {
+        const { id } = req.params;
+        if (!id) {
+            return res.status(400).json({ message: "User ID is required!" });
+        }
+        const user = await User.findByIdAndUpdate(id, { $set: { isLoggedIn: false } }, {
+            new: true
+        });
+        if (!user) {
+            return res.status(404).json({ message: "User not found!" });
+        }
+        res.status(200).json({ message: "Logout SuccessFully!!" });
+    }
+    catch (err) {
+        res.status(500).json({ message: err.message });
+    }
+}
+
+export { register, login, logout };
