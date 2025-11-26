@@ -2,7 +2,7 @@ import express from "express";
 import authMiddleware from "../middlewares/authMiddlware.js";
 import authorizeRole from "../middlewares/roleMiddlware.js";
 import authPermission from "../middlewares/permissionMiddleware.js";
-import { view, update, newuser } from "../controllers/userController.js";
+import { view, update, newuser, single } from "../controllers/userController.js";
 
 const userRoutes = express.Router();
 
@@ -24,6 +24,8 @@ userRoutes.get("/user", authMiddleware, authorizeRole("admin", "manager", "user"
 
 // create total user route
 userRoutes.get("/view", authMiddleware, view);
+
+userRoutes.get("/single/:id", authMiddleware, single);
 
 // update user route
 userRoutes.put("/update/:id", authMiddleware, update);

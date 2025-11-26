@@ -15,7 +15,7 @@ const authMiddleware = async (req, res, next) => {
         const decode = jwt.verify(token, process.env.API_SECRETKEY);
         req.user = decode;
         next();
-        console.log("the decoded user is :", req.user);
+      //  console.log("the decoded user is :", req.user);
     }
     catch (err) {
         res.status(500).json({ message: err.message });

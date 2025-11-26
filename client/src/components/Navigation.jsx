@@ -1,7 +1,7 @@
 import { FiMenu, FiUser, FiBell, FiGrid } from "react-icons/fi";
 import { Link } from "react-router-dom";
 
-const Navigation = ({ name, toggleSidebar }) => {
+const Navigation = ({ name, toggleSidebar, userId }) => {
     return (
         <header className="w-full bg-white px-4 py-3 shadow-md flex justify-between items-center fixed top-0 left-0 z-50 nunito-uniquifier">
             <div className="flex items-center gap-3">
@@ -23,7 +23,7 @@ const Navigation = ({ name, toggleSidebar }) => {
                         3
                     </span>
                 </div>
-                <Link className="text-black" to="/users/profile">
+                <Link className="text-black" to={`/users/profile/${userId}`}>
                     <FiUser className="text-xl cursor-pointer hover:text-blue-600 transition" />
                 </Link>
             </div>

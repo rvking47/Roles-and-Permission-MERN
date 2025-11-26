@@ -57,9 +57,10 @@ const login = async (req, res) => {
         });
 
         user.isLoggedIn = true;
+        user.lastLoginAt = new Date();
         await user.save();
 
-        res.status(200).json({ message: `${username} user login successFully!!`, token: jwtToken, user: { _id: user._id, username: user.username, email: user.email, role: user.role.name, isLoggedIn: user.isLoggedIn, permissions: user.role.permissions.map(p => p.name) } });
+        res.status(200).json({ message: `${username} user login successFully!!`, token: jwtToken, user: { _id: user._id, username: user.username, email: user.email, role: user.role.name, isLoggedIn: user.isLoggedIn, lastLoginAt: user.lastLoginAt, permissions: user.role.permissions.map(p => p.name) } });
     }
     catch (err) {
         res.status(500).json({ message: err.message });

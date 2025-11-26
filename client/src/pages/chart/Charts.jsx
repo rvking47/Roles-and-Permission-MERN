@@ -29,56 +29,66 @@ const base_url = "http://localhost:7001";
 
 const Charts = () => {
 
-  const [usersMonth, setUserMonth] = useState([]);
-  const [usersActive, setUsersActive] = useState([]);
+  const [usersMonth, setUserMonth] = useState(new Array(12).fill(0));
+  const [usersActive, setUsersActive] = useState(new Array(7).fill(0));
   const token = localStorage.getItem("token");
+
+
   const handleUsers = async () => {
     try {
       const result = await axios.get(`${base_url}/api/users/view`, {
-        headers: { "Authorization": `Bearer ${token}` },
-        validateStatus: () => true
+        headers: { Authorization: `Bearer ${token}` },
+        validateStatus: () => true,
       });
-      console.log(result)
+
       if (result.status === 200) {
         const users = result.data;
+
         const monthCounts = new Array(12).fill(0);
-        users.forEach((user) => {
+        users.forEach(user => {
           const month = new Date(user.createdAt).getMonth();
           monthCounts[month]++;
-        })
+        });
+
         setUserMonth(monthCounts);
 
         const weekCounts = new Array(7).fill(0);
+        const now = new Date();
+        const lastWeek = new Date();
+        lastWeek.setDate(now.getDate() - 7);
 
         users.forEach(user => {
-          if (user.isLoggedIn) {
-            const day = new Date(user.updatedAt || user.createdAt).getDay();
-            weekCounts[day]++;
+          if (user.lastLoginAt) {
+            const loginDate = new Date(user.lastLoginAt);
+
+            // Only count if login was within last 7 days
+            if (loginDate >= lastWeek) {
+              const day = loginDate.getDay();
+              weekCounts[day]++;
+            }
           }
         });
 
-        const arrenged = [
+        const arranged = [
           weekCounts[1],
           weekCounts[2],
           weekCounts[3],
           weekCounts[4],
           weekCounts[5],
           weekCounts[6],
-          weekCounts[0]
+          weekCounts[0],
         ];
-        setUsersActive(arrenged)
+
+        setUsersActive(arranged);
       }
+    } catch (err) {
+      toast.error("Server Error");
     }
-    catch (err) {
-      toast.error("Server Error", err);
-    }
-  }
-
-
+  };
 
   // LINE CHART DATA (User Growth)
   const lineData = {
-    labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun","July","Aug","Sep","Oct","Nov","Dec"],
+    labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "July", "Aug", "Sep", "Oct", "Nov", "Dec"],
     datasets: [
       {
         label: "User Growth",
@@ -90,9 +100,6 @@ const Charts = () => {
     ]
   };
 
-  useEffect(() => {
-    handleUsers();
-  }, [])
 
   // BAR CHART DATA (Active Users)
   const barData = {
@@ -106,6 +113,10 @@ const Charts = () => {
       }
     ]
   };
+
+  useEffect(() => {
+    handleUsers();
+  }, [])
 
   return (
     <div className="mt-10 grid grid-cols-1 lg:grid-cols-2 gap-8">

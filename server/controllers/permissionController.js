@@ -28,7 +28,7 @@ const view = async (req, res) => {
         if (!permission) {
             return res.status(400).json({ message: "Permissions not found" });
         }
-        res.status(200).json({ permission })
+        res.status(200).json(permission)
     }
     catch (err) {
         res.status(500).json({ message: err.message });

@@ -13,6 +13,20 @@ const view = async (req, res) => {
     }
 }
 
+const single = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const users = await User.findOne({ _id: id });
+        if (!users) {
+            return res.status(402).json({ message: "User not found!!" })
+        }
+        res.status(200).json(users);
+    }
+    catch (err) {
+        res.status(500).json({ message: err.message });
+    }
+}
+
 const update = async (req, res) => {
     try {
         const { id } = req.params;
@@ -53,4 +67,4 @@ const newuser = async (req, res) => {
     }
 }
 
-export { view, update, newuser };
+export { view, update, newuser, single };

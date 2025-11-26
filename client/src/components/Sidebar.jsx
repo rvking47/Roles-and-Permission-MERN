@@ -28,10 +28,10 @@ const Sidebar = ({ isOpen, name, role, handleLogout }) => {
         <ul className="space-y-3 mt-5 pt-5 pr-5 nunito-uniquifier">
 
           {/* Dashboard */}
-          <Link to="/users/admin" className="text-black flex items-center hover:bg-gray-100 rounded-lg cursor-pointer" style={{textDecoration:"none"}}>
-          <li className="flex items-center gap-3 p-2">
-            <FiHome className="text-lg" /> Dashboard
-          </li>
+          <Link to="/users/admin" className="text-black flex items-center hover:bg-gray-100 rounded-lg cursor-pointer" style={{ textDecoration: "none" }}>
+            <li className="flex items-center gap-3 p-2">
+              <FiHome className="text-lg" /> Dashboard
+            </li>
           </Link>
 
           {/* PROJECTS DROPDOWN */}
@@ -46,9 +46,8 @@ const Sidebar = ({ isOpen, name, role, handleLogout }) => {
               </div>
 
               <span
-                className={`transition-transform duration-300 ${
-                  openProjects ? "rotate-180" : ""
-                }`}
+                className={`transition-transform duration-300 ${openProjects ? "rotate-180" : ""
+                  }`}
               >
                 <FiChevronDown className="text-lg" />
               </span>
@@ -56,9 +55,8 @@ const Sidebar = ({ isOpen, name, role, handleLogout }) => {
 
             {/* Dropdown Items */}
             <div
-              className={`overflow-hidden transition-all duration-300 ${
-                openProjects ? "max-h-40" : "max-h-0"
-              }`}
+              className={`overflow-hidden transition-all duration-300 ${openProjects ? "max-h-40" : "max-h-0"
+                }`}
             >
               <ul className="ml-10 mt-1 space-y-2">
                 <li className="py-1 cursor-pointer hover:text-blue-600">Project List</li>
@@ -80,9 +78,8 @@ const Sidebar = ({ isOpen, name, role, handleLogout }) => {
               </div>
 
               <span
-                className={`transition-transform duration-300 ${
-                  openRoles ? "rotate-180" : ""
-                }`}
+                className={`transition-transform duration-300 ${openRoles ? "rotate-180" : ""
+                  }`}
               >
                 <FiChevronDown className="text-lg" />
               </span>
@@ -90,14 +87,20 @@ const Sidebar = ({ isOpen, name, role, handleLogout }) => {
 
             {/* Dropdown Items */}
             <div
-              className={`overflow-hidden transition-all duration-300 ${
-                openRoles ? "max-h-40" : "max-h-0"
-              }`}
+              className={`overflow-hidden transition-all duration-300 ${openRoles ? "max-h-40" : "max-h-0"
+                }`}
             >
               <ul className="ml-10 mt-1 space-y-2">
-                <li className="py-1 cursor-pointer hover:text-blue-600">Role List</li>
-                <li className="py-1 cursor-pointer hover:text-blue-600">Permission List</li>
-                <li className="py-1 cursor-pointer hover:text-blue-600">Manage Permission</li>
+                <Link to="/users/admin/roles" className="text-black flex items-center" style={{ textDecoration: "none" }}>
+                  <li className="flex items-center py-1 cursor-pointer hover:text-blue-600">
+                    Role List
+                  </li>
+                </Link>
+                  <Link to="/users/admin/permissions" className="text-black flex items-center" style={{ textDecoration: "none" }}>
+                  <li className="flex items-center py-1 cursor-pointer hover:text-blue-600">
+                    Permission List
+                  </li>
+                </Link>
               </ul>
             </div>
           </li>
@@ -123,7 +126,7 @@ const Sidebar = ({ isOpen, name, role, handleLogout }) => {
         />
 
         <div>
-          <h6 className="font-semibold text-sm">{name}</h6>
+          <h6 className="font-semibold text-sm text-black">{name}</h6>
           <span className="text-xs">Role : {role}</span>
         </div>
 

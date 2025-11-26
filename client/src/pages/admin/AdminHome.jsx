@@ -17,16 +17,23 @@ const AdminHome = () => {
         headers: { "Authorization": `Bearer ${token}` },
         validateStatus: () => true
       });
+
       if (result.status === 200) {
+
+        // store all users
         setUserCount(result.data);
-        const actives = result.data.filter(user => user.isLoggedIn === true);
-        setUsersActive(actives.length)
+
+        // Count active users based on lastLoginAt
+        const actives = result.data.filter(user => user.lastLoginAt !== null);
+
+        setUsersActive(actives.length);
       }
     }
     catch (err) {
       toast.error("Server Error", err);
     }
-  }
+  };
+
 
   const handleNewUsers = async () => {
     try {
@@ -93,10 +100,10 @@ const AdminHome = () => {
                 <FiUserPlus />
               </div>
               <div>
-                <h4 className="text-lg font-semibold">New Registrations Today</h4>
+                <h4 className="text-lg font-semibold">New Registrations</h4>
                 <p className="text-gray-500 text-sm">{
                   usersNew.length
-                  }</p>
+                }</p>
               </div>
             </div>
           </div>

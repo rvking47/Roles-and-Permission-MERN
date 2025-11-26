@@ -22,7 +22,7 @@ const create = async (req, res) => {
             permissions: validPermission.map(p => p._id)
         });
         await role.save();
-        res.status(201).json({ message: "Role created!!", role });
+        res.status(200).json({ message: "Role created!!", role });
 
     }
     catch (err) {

@@ -21,6 +21,10 @@ const userSchema = new mongoose.Schema({
     isLoggedIn: {
         type: Boolean,
         default: false
+    },
+    lastLoginAt: {
+        type: Date,
+        default: null
     }
 },
     { timestamps: true }
