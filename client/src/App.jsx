@@ -10,6 +10,7 @@ import Accessdenied from './pages/AccessDenied/Accessdenied';
 import UserProfile from './pages/profile/UserProfile';
 import RoleView from './pages/admin/roles/RoleView';
 import PermissionList from './pages/admin/permission/PermissionList';
+import UserList from './pages/admin/users/UserList';
 
 const App = () => {
 
@@ -66,6 +67,9 @@ const App = () => {
 
          {/* Permissions */}
         <Route path='/users/admin/permissions' element={<PrivateRoute allowedRoles={["admin"]} ><PermissionList /></PrivateRoute>} />
+
+        {/* User Profile */}
+        <Route path='/users/admin/user' element={<PrivateRoute allowedRoles={["admin"]} ><UserList /></PrivateRoute>} />
 
         {/* User Profile */}
         <Route path='/users/profile/:id' element={<PrivateRoute allowedRoles={["admin", "manager", "user"]}><UserProfile /></PrivateRoute>} />

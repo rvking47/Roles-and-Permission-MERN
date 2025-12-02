@@ -96,7 +96,7 @@ const Sidebar = ({ isOpen, name, role, handleLogout }) => {
                     Role List
                   </li>
                 </Link>
-                  <Link to="/users/admin/permissions" className="text-black flex items-center" style={{ textDecoration: "none" }}>
+                <Link to="/users/admin/permissions" className="text-black flex items-center" style={{ textDecoration: "none" }}>
                   <li className="flex items-center py-1 cursor-pointer hover:text-blue-600">
                     Permission List
                   </li>
@@ -106,9 +106,11 @@ const Sidebar = ({ isOpen, name, role, handleLogout }) => {
           </li>
 
           {/* Users */}
-          <li className="flex items-center gap-3 p-2 hover:bg-gray-100 rounded-lg cursor-pointer">
-            <FiUsers className="text-lg" /> Users
-          </li>
+          <Link to="/users/admin/user" className="text-black flex items-center hover:bg-gray-100 rounded-lg cursor-pointer" style={{ textDecoration: "none" }}>
+            <li className="flex items-center gap-3 p-2">
+              <FiUsers className="text-lg" /> Users
+            </li>
+          </Link>
 
           {/* Settings */}
           <li className="flex items-center gap-3 p-2 hover:bg-gray-100 rounded-lg cursor-pointer">

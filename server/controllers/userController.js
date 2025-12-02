@@ -2,16 +2,22 @@ import User from "../models/userModel.js";
 
 const view = async (req, res) => {
     try {
-        const users = await User.find({});
-        if (!users) {
-            return res.status(402).json({ message: "User not found!!" })
+        const users = await User.find({})
+            .populate({
+                path: "role", select: "name permissions", 
+                populate: { path: "permissions", select: "name" }
+            });
+
+        if (!users || users.length === 0) {
+            return res.status(402).json({ message: "User not found!!" });
         }
+
         res.status(200).json(users);
-    }
-    catch (err) {
+    } catch (err) {
         res.status(500).json({ message: err.message });
     }
-}
+};
+
 
 const single = async (req, res) => {
     try {

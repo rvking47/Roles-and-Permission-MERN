@@ -56,7 +56,6 @@ const Layout = ({ children }) => {
                 headers: { "Authorization": `Bearer ${token}` },
                 validateStatus: () => true
             });
-            console.log(response)
             if (response.status === 200) {
                 setProfileName(response.data.username);
             }

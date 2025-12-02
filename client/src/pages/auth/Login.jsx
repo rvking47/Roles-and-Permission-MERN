@@ -1,7 +1,7 @@
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import toast, { Toaster } from 'react-hot-toast';
-import {useState } from 'react';
+import { useEffect, useState } from 'react';
 
 const base_url = "http://localhost:7001";
 
@@ -17,7 +17,6 @@ const Login = () => {
                 headers: { "Authorization": "application/json" },
                 validateStatus: () => true
             });
-            console.log(result);
             if (result.status === 200) {
                 localStorage.setItem("token", result.data.token);
                 localStorage.setItem("role", result.data.user.role);
@@ -48,6 +47,13 @@ const Login = () => {
             toast.error("Server Error", err);
         }
     }
+
+    useEffect(() => {
+        const token = localStorage.getItem("token");
+        if (!token) {
+            navigate("/login");
+        }
+    }, []);
 
     return (
         <>

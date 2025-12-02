@@ -1,7 +1,7 @@
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import toast, { Toaster } from 'react-hot-toast';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 const base_url = "http://localhost:7001";
 
@@ -19,7 +19,6 @@ const Signup = () => {
                 headers: { "Authorization": "application/json" },
                 validateStatus: () => true
             });
-            console.log(result);
             if (result.status === 201) {
                 setUsername("");
                 setEmail("");
@@ -41,6 +40,12 @@ const Signup = () => {
             toast.error("Server Error", err);
         }
     }
+    useEffect(() => {
+        const token = localStorage.getItem("token");
+        if (!token) {
+            navigate("/signup");
+        }
+    }, []);
 
     return (
         <>

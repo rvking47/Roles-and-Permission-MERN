@@ -34,6 +34,8 @@ userRoutes.put("/update/:id", authMiddleware, update);
 // new register route
 userRoutes.get("/newusers", authMiddleware, newuser);
 
+//delete user route
+
 
 
 export default userRoutes;
