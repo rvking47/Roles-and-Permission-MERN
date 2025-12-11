@@ -49,11 +49,11 @@ const login = async (req, res) => {
 
         const hashpassword = await bcrypt.compare(password, user.password);
         if (!hashpassword) {
-            return res.status(404).json({ message: "Username and password wrong!!" });
+            return res.status(404).json({ message: "Username and password wrong!!" }); 
         }
 
         const jwtToken = jwt.sign({ _id: user._id, username: user.username, role: user.role.name, permissions: user.role.permissions.map(p => p.name) }, process.env.API_SECRETKEY, {
-            expiresIn: "5d"
+            expiresIn: "2h"
         });
 
         user.isLoggedIn = true;

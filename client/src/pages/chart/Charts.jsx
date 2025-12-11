@@ -51,32 +51,36 @@ const Charts = () => {
         });
 
         setUserMonth(monthCounts);
-
         const weekCounts = new Array(7).fill(0);
+
         const now = new Date();
-        const lastWeek = new Date();
-        lastWeek.setDate(now.getDate() - 7);
+        now.setHours(0, 0, 0, 0);
+
+        const lastWeek = new Date(now);
+        lastWeek.setDate(now.getDate() - 6);
 
         users.forEach(user => {
           if (user.lastLoginAt) {
             const loginDate = new Date(user.lastLoginAt);
 
-            // Only count if login was within last 7 days
-            if (loginDate >= lastWeek) {
-              const day = loginDate.getDay();
-              weekCounts[day]++;
+            // Normalize the login date
+            loginDate.setHours(0, 0, 0, 0);
+
+            if (loginDate >= lastWeek && loginDate <= now) {
+              const dayIndex = loginDate.getDay(); // 0 = Sun
+              weekCounts[dayIndex]++;
             }
           }
         });
 
         const arranged = [
-          weekCounts[1],
-          weekCounts[2],
-          weekCounts[3],
-          weekCounts[4],
-          weekCounts[5],
-          weekCounts[6],
-          weekCounts[0],
+          weekCounts[1], // Mon
+          weekCounts[2], // Tue
+          weekCounts[3], // Wed
+          weekCounts[4], // Thu
+          weekCounts[5], // Fri
+          weekCounts[6], // Sat
+          weekCounts[0], // Sun
         ];
 
         setUsersActive(arranged);

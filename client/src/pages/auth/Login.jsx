@@ -10,6 +10,7 @@ const Login = () => {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
 
+
     const handleLogin = async (e) => {
         e.preventDefault();
         try {
@@ -21,6 +22,8 @@ const Login = () => {
                 localStorage.setItem("token", result.data.token);
                 localStorage.setItem("role", result.data.user.role);
                 localStorage.setItem("user", JSON.stringify(result.data.user));
+                 console.log(JSON.stringify(result.data.user));
+                localStorage.setItem("permissions", JSON.stringify(result.data.user.permissions));
                 toast.success(result.data.message);
                 setUsername("");
                 setPassword("");
@@ -50,8 +53,8 @@ const Login = () => {
 
     useEffect(() => {
         const token = localStorage.getItem("token");
-        if (!token) {
-            navigate("/login");
+        if (token) {
+            navigate("/users");
         }
     }, []);
 

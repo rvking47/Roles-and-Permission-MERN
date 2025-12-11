@@ -42,8 +42,8 @@ const Signup = () => {
     }
     useEffect(() => {
         const token = localStorage.getItem("token");
-        if (!token) {
-            navigate("/signup");
+        if (token) {
+            navigate("/users");
         }
     }, []);
 

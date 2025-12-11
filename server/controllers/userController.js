@@ -4,7 +4,7 @@ const view = async (req, res) => {
     try {
         const users = await User.find({})
             .populate({
-                path: "role", select: "name permissions", 
+                path: "role", select: "name permissions",
                 populate: { path: "permissions", select: "name" }
             });
 
@@ -36,7 +36,7 @@ const single = async (req, res) => {
 const update = async (req, res) => {
     try {
         const { id } = req.params;
-        const { username, email, password } = req.body;
+        const { username, email, password, role } = req.body;
         const result = await User.findById(id);
         if (!result) {
             return res.status(402).json({ message: "User Id not found!!" })
@@ -45,6 +45,7 @@ const update = async (req, res) => {
             username: username || result.username,
             email: email || result.email,
             password: password || result.password,
+            role: role || result.role
         }
         const response = await User.findByIdAndUpdate(id, {
             $set: updateUser
@@ -73,4 +74,33 @@ const newuser = async (req, res) => {
     }
 }
 
-export { view, update, newuser, single };
+const distroy = async (req, res) => {
+    try {
+        const { id } = req.params;
+        await User.deleteOne({ _id: id });
+        res.status(200).json({ message: "User deleted!!" });
+    }
+    catch (err) {
+        res.status(500).json({ message: err.message });
+    }
+}
+
+const checkPermission = async (req,res) => {
+    try {
+        const user = await User.findById(req.user._id)
+            .populate({
+                path: "role",
+                populate: {
+                    path: "permissions",
+                    model: "permission"
+                }
+            });
+
+        res.json({ username: user.username, role: user.role.name, permissions: user.role.permissions.filter(p => p).map(p => p.name) });
+    }
+    catch (err) {
+        res.status(500).json({ message: err.message });
+    }
+}
+
+export { view, update, newuser, single, distroy, checkPermission };

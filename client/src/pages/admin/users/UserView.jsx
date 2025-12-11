@@ -16,7 +16,6 @@ const UserView = ({ onClose, username, email, role, date, isLoggedIn }) => {
                 headers: { "Authorization": `Bearer ${token}` },
                 validateStatus: () => true
             });
-            console.log(result);
             if (result.status === 200) {
                 setRoleName(result.data.role.name)
             }

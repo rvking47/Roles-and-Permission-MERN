@@ -14,6 +14,8 @@ const Layout = ({ children }) => {
     const [profileId, setProfileId] = useState(null);
     const [sidebarOpen, setSidebarOpen] = useState(false);
     const token = localStorage.getItem("token");
+    const [permissions, setPermissions] = useState([]);
+ 
 
     const handleLogout = async (profileId) => {
         try {
@@ -27,11 +29,9 @@ const Layout = ({ children }) => {
             );
 
             if (result.status === 200) {
-                // remove only required data
                 localStorage.removeItem("token");
                 localStorage.removeItem("user");
                 localStorage.removeItem("role");
-
                 toast.loading("Admin Logged Out", { duration: 1000 });
 
                 setTimeout(() => {
@@ -44,11 +44,6 @@ const Layout = ({ children }) => {
             toast.error("Server Error");
         }
     };
-
-    const handleLogoutMemo = React.useCallback(() => {
-        handleLogout(profileId);
-    }, [profileId, token]);
-
 
     const handleSingleUser = async (profileId) => {
         try {
@@ -71,7 +66,6 @@ const Layout = ({ children }) => {
             const parseUser = JSON.parse(accesstoken);
             setProfileRole(parseUser.role);
             setProfileId(parseUser._id);
-
             handleSingleUser(parseUser._id);
         }
     }, []);
@@ -79,7 +73,7 @@ const Layout = ({ children }) => {
         <>
             <div className="min-h-screen bg-gray-100">
                 <Navigation toggleSidebar={() => setSidebarOpen(!sidebarOpen)} userId={profileId} />
-                <Sidebar isOpen={sidebarOpen} name={profileName} role={profileRole} handleLogout={handleLogoutMemo} />
+                <Sidebar isOpen={sidebarOpen} name={profileName} role={profileRole} handleLogout={() => handleLogout(profileId)} />
                 <main className="pt-20 md:ml-64 p-4 transition-all">
                     {children}
                 </main>

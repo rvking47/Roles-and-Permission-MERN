@@ -9,10 +9,13 @@ import toast from 'react-hot-toast';
 import UserView from './UserView';
 import UserDelete from './UserDelete';
 import UserEdit from './UserEdit';
+import { usePermissions } from '../../context/PermissionContext';
+import { Navigate } from 'react-router-dom';
 
 const base_url = "http://localhost:7001";
 
 const UserList = () => {
+    const { permissions} = usePermissions();
     const [searchTerm, setSearchTerm] = useState('');
     const [currentPage, setCurrentPage] = useState(1);
     const usersPerPage = 5;
@@ -54,6 +57,7 @@ const UserList = () => {
     const totalPages = Math.ceil(filteredUsers.length / usersPerPage);
 
     const paginate = (pageNumber) => setCurrentPage(pageNumber);
+
 
     const handleView = async () => {
         try {
@@ -100,7 +104,6 @@ const UserList = () => {
                 headers: { "Authorization": `Bearer ${token}` },
                 validateStatus: () => true
             });
-            console.log(result);
             if (result.status === 200) {
                 setSingleUser(result.data);
                 setIsViewModalOpen(true);
@@ -119,7 +122,6 @@ const UserList = () => {
                 headers: { "Authorization": `Bearer ${token}` },
                 validateStatus: () => true
             });
-            console.log(result);
             if (result.status === 200) {
                 setDeletingUser(result.data);
                 setDeleteConfirmation('');
@@ -168,7 +170,6 @@ const UserList = () => {
                 headers: { "Authorization": `Bearer ${token}` },
                 validateStatus: () => true
             });
-            console.log(result.data.role);
             if (result.status === 200) {
                 setEditingUser(result.data._id);
                 setEditFormData({
@@ -210,6 +211,10 @@ const UserList = () => {
         handleFetchRole();
     }, []);
 
+    if (!permissions.includes("list_user")) {
+        return <Navigate to="/access-denied" replace />;
+    }
+
     return (
         <Layout>
             <div className="min-h-screen nunito-uniquifier">
@@ -226,8 +231,9 @@ const UserList = () => {
                                             <p className="text-slate-600 mx-3">Manage and view all system users</p>
                                         </div>
                                         <button
+                                            disabled={!permissions.includes("create_user")}
                                             onClick={() => setIsCreateModalOpen(true)}
-                                            className="p-2 bg-green-600 text-white hover:bg-green-700 rounded-lg transition-colors mx-3"
+                                            className={`${!permissions.includes("create_user") ? "p-2 bg-gray-400 cursor-not-allowed text-white hover:bg-gray-400 rounded-lg transition-colors mx-3" : "p-2 bg-green-600 text-white hover:bg-green-700 rounded-lg transition-colors mx-3"} `}
                                             title="Create Permission"
                                         >
                                             <Plus className="w-5 h-5" />
@@ -279,9 +285,11 @@ const UserList = () => {
                                                                 <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-700">{user.email}</td>
                                                                 <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-700">{user.role?.name}</td>
                                                                 <td className="px-4 py-4 whitespace-nowrap">
-                                                                    <span className={`px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${user.isLoggedIn === true ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
-                                                                        }`}>
-                                                                        {user.isLoggedIn === true ? 'Active' : 'Inactive'}
+                                                                    <span
+                                                                        className={`px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full
+                                                                        ${user.isLoggedIn ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}
+                                                                    >
+                                                                        {user.isLoggedIn ? 'Active' : 'Inactive'}
                                                                     </span>
                                                                 </td>
                                                                 <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-700">{new Date(user.createdAt).toLocaleDateString('en-US', {
@@ -293,40 +301,46 @@ const UserList = () => {
                                                                     <div className="flex items-center justify-center gap-2">
 
                                                                         {/* EDIT */}
-                                                                        <button onClick={() => handleEdit(user._id)}
-                                                                            className={`p-2 rounded-lg transition-colors ${isDisabled
+                                                                        <button
+                                                                            disabled={!permissions.includes("edit_user") || isDisabled}
+                                                                            onClick={() => handleEdit(user._id)}
+                                                                            className={`p-2 rounded-lg transition-colors ${!permissions.includes("edit_user") || isDisabled
                                                                                 ? "text-gray-400 cursor-not-allowed"
-                                                                                : "text-blue-600 hover:bg-blue-50"
+                                                                                : "p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
                                                                                 }`}
                                                                             title="Edit"
-                                                                            disabled={isDisabled}
                                                                         >
                                                                             <Edit2 className="w-4 h-4" />
                                                                         </button>
 
                                                                         {/* DELETE */}
-                                                                        <button onClick={() => handleDelete(user._id)}
-                                                                            className={`p-2 rounded-lg transition-colors ${isDisabled
+                                                                        <button
+                                                                            disabled={!permissions.includes("delete_user") || isDisabled}
+                                                                            onClick={() => handleDelete(user._id)}
+                                                                            className={`p-2 rounded-lg transition-colors ${!permissions.includes("delete_user") || isDisabled
                                                                                 ? "text-gray-400 cursor-not-allowed"
-                                                                                : "text-red-600 hover:bg-red-50"
+                                                                                : "p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
                                                                                 }`}
                                                                             title="Delete"
-                                                                            disabled={isDisabled}
+
                                                                         >
                                                                             <Trash2 className="w-4 h-4" />
                                                                         </button>
 
                                                                         {/* VIEW */}
-                                                                        <button onClick={() => handleUserView(user._id)}
-                                                                            className={`p-2 rounded-lg transition-colors ${isDisabled
+
+                                                                        <button
+                                                                            disabled={!permissions.includes("view_user") || isDisabled}
+                                                                            onClick={() => handleUserView(user._id)}
+                                                                            className={`p-2 rounded-lg transition-colors ${!permissions.includes("view_user") || isDisabled
                                                                                 ? "text-gray-400 cursor-not-allowed"
                                                                                 : "text-purple-600 hover:bg-purple-50"
                                                                                 }`}
                                                                             title="View"
-                                                                            disabled={isDisabled}
                                                                         >
                                                                             <FiEye className="w-4 h-4" />
                                                                         </button>
+
 
                                                                     </div>
                                                                 </td>
